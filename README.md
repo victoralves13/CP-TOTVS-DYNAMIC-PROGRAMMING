@@ -77,6 +77,10 @@ No final da execução, a lista `pendentes_dp` contém os termos que não tivera
 
 O projeto não precisa instalar nenhuma biblioteca externa.
 
+### VS Code
+
+Abra o arquivo `checkpoint_preprocessamento_totvs.py` no VS Code e execute pelo botão de execução do Python ou pelo terminal.
+
 ### PyCharm
 
 Abra o arquivo `checkpoint_preprocessamento_totvs.py` no PyCharm e execute o arquivo.
