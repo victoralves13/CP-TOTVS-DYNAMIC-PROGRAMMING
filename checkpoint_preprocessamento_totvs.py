@@ -1,9 +1,4 @@
 # Checkpoint - Pré-processamento de Transcrições TOTVS
-# Dynamic Programming - Engenharia de Software
-
-# ============================================================
-# ETAPA 1 - REGISTROS
-# ============================================================
 
 registros = [
     ["1247082", "LOCUTOR 54", " Perguntar se era o novo uniforme da Totos. "],
@@ -13,15 +8,14 @@ registros = [
     ["1247082", "LOCUTOR 83", "O modulo Datasul esta funcionando."],
     ["1247082", "LOCUTOR 72", "A migracao para totvss ainda esta em analise."],
 
-    # 3 falas reais extraídas do material do Challenge (CSV)
+    # 3 falas reais do material do Challenge
     ["1000000", "LOCUTOR 1", "A nossa solução conecta todas as lojas em uma plataforma."],
     ["1000000", "LOCUTOR 2", "Como funciona?"],
     ["1000000", "LOCUTOR 1", "A gente oferece uma plataforma integrada."]
 ]
 
-print("=" * 60)
 print("ETAPA 1 - REGISTROS BRUTOS")
-print("=" * 60)
+print()
 
 for registro in registros:
     print("Meeting:", registro[0])
@@ -31,10 +25,6 @@ for registro in registros:
 
 print("Quantidade total processada:", len(registros))
 
-
-# ============================================================
-# ETAPA 2 - LIMPEZA BÁSICA
-# ============================================================
 
 def limpar_texto(texto):
     return texto.lower().strip()
@@ -46,26 +36,19 @@ for registro in registros:
     meeting = registro[0]
     locutor = registro[1]
     texto = registro[2]
-
     texto_limpo = limpar_texto(texto)
-
     registros_limpos.append([meeting, locutor, texto_limpo])
 
 
 print()
-print("=" * 60)
 print("ETAPA 2 - REGISTROS LIMPOS")
-print("=" * 60)
+print()
 
 for i in range(len(registros)):
     print("Antes :", registros[i][2])
     print("Depois:", registros_limpos[i][2])
     print("-" * 40)
 
-
-# ============================================================
-# ETAPA 3 - COMPARAÇÃO EXATA
-# ============================================================
 
 catalogo = ["totvs", "protheus", "datasul", "rm", "fluig", "senior"]
 
@@ -102,9 +85,8 @@ for termo in termos_observados:
 
 
 print()
-print("=" * 60)
 print("ETAPA 3 - TRIAGEM POR IGUALDADE EXATA")
-print("=" * 60)
+print()
 
 for item in relatorio:
     print("Termo:", item[0], "| Status:", item[1])
@@ -112,10 +94,6 @@ for item in relatorio:
 print()
 print("Lista de pendentes para DP:", pendentes_dp)
 
-
-# ============================================================
-# ETAPA 4 - PREPARAÇÃO DA MATRIZ DP
-# ============================================================
 
 def preparar_dp(a, b):
     a = limpar_texto(a)
@@ -143,10 +121,6 @@ def preparar_dp(a, b):
     return matriz
 
 
-# ============================================================
-# ETAPA 5 - CONEXÃO DOS PENDENTES AO PIPELINE
-# ============================================================
-
 pares_teste = [
     ["totos", "totvs"],
     ["protheu", "protheus"],
@@ -154,14 +128,12 @@ pares_teste = [
 ]
 
 print()
-print("=" * 60)
 print("ETAPA 5 - MATRIZES DP PREPARADAS")
-print("=" * 60)
+print()
 
 for par in pares_teste:
     a = par[0]
     b = par[1]
-
     dp = preparar_dp(a, b)
 
     print()
@@ -182,14 +154,10 @@ for par in pares_teste:
         print(linha)
 
 
-# ============================================================
-# TESTES MÍNIMOS DE ACEITAÇÃO
-# ============================================================
-
+# Testes pedidos no checkpoint
 print()
-print("=" * 60)
 print("TESTES MÍNIMOS DE ACEITAÇÃO")
-print("=" * 60)
+print()
 
 print('limpar_texto(" TOTOS ") =', limpar_texto(" TOTOS "))
 print('comparar_exato("TOTVS", " totvs ") =',
@@ -205,6 +173,5 @@ print('preparar_dp("protheu", "protheus") =',
       len(dp_protheu), "x", len(dp_protheu[0]))
 
 print("pendentes_dp =", pendentes_dp)
-
 print()
 print("Execução concluída.")
