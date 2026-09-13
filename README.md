@@ -9,86 +9,82 @@
 
 ## Objetivo
 
-Construir a etapa inicial de um pré-processador para transcrições do Challenge TOTVS.
+Neste checkpoint, fizemos a primeira parte do pré-processamento das transcrições do Challenge TOTVS.
 
-O programa transforma falas brutas em registros estruturados, realiza uma limpeza básica do texto, separa os casos de igualdade exata dos casos que precisam de comparação aproximada e prepara a matriz de Programação Dinâmica para a próxima etapa.
+A ideia foi organizar algumas falas em listas, fazer uma limpeza simples dos textos e verificar quais termos já aparecem exatamente no catálogo. Os termos que não foram encontrados ficam separados para serem trabalhados com Programação Dinâmica na próxima etapa.
 
-Nesta etapa, a distância de edição completa não é calculada. As células internas da matriz permanecem com seus valores iniciais.
+## O que foi feito
 
-## Organização das funções
+### 1. Registros
 
-### `limpar_texto(texto)`
+Os dados foram organizados no formato:
 
-Recebe um texto e aplica:
+`[meeting, locutor, texto]`
 
-- `lower()` para transformar as letras em minúsculas;
-- `strip()` para remover espaços no início e no final.
+Também colocamos algumas falas do material do Challenge para usar como exemplo no programa.
 
-A função recebe o texto por parâmetro e retorna o texto limpo.
+### 2. Limpeza do texto
 
-### `comparar_exato(a, b)`
+Criamos a função `limpar_texto(texto)`, que usa:
 
-Utiliza `limpar_texto()` nos dois termos e verifica se eles são exatamente iguais.
+- `lower()` para deixar o texto em letras minúsculas;
+- `strip()` para tirar espaços no começo e no final.
 
-Quando o termo observado corresponde ao catálogo, ele recebe o status `EXATO`. Caso contrário, entra na lista `pendentes_dp`.
+Depois da limpeza, os registros continuam com o meeting e o locutor, mas passam a ter o texto tratado.
 
-### `preparar_dp(a, b)`
+### 3. Comparação exata
 
-Prepara a matriz usada na comparação aproximada.
+A função `comparar_exato(a, b)` limpa os dois termos antes de comparar.
 
-As dimensões são:
+Se o termo observado for igual a algum item do catálogo, ele recebe `EXATO`. Se não for igual, ele vai para a lista `pendentes_dp`.
+
+Assim, termos como `Totos`, `Protheu` e `totvss` não são corrigidos automaticamente. Eles ficam para a etapa de comparação aproximada.
+
+### 4. Preparação da matriz DP
+
+A função `preparar_dp(a, b)` cria a matriz que será usada na próxima etapa.
+
+O tamanho da matriz é calculado assim:
 
 - linhas = `len(a) + 1`
 - colunas = `len(b) + 1`
 
-O `+1` existe porque a matriz também representa o caso-base relacionado à string vazia.
+Esse `+1` é necessário para considerar também o caso em que estamos comparando com uma string vazia.
 
-A primeira coluna recebe os valores `0, 1, 2, ...` e a primeira linha também recebe `0, 1, 2, ...`.
+A primeira linha e a primeira coluna são preenchidas com `0, 1, 2, 3...`.
 
-O estado `dp[i][j]` representa o subproblema associado aos primeiros `i` caracteres de `a` e aos primeiros `j` caracteres de `b`. Nesta etapa, somente a estrutura e os casos-base são preparados; a transição das células internas será feita posteriormente na disciplina.
+De forma simples, `dp[i][j]` indica a posição referente aos primeiros `i` caracteres de `a` e aos primeiros `j` caracteres de `b`. Neste checkpoint, não calculamos as células internas da matriz. Essa parte fica para a continuação da implementação de Programação Dinâmica.
 
-## Fluxo do programa
+## Testes
 
-```text
-Registros brutos
-       ↓
-Limpeza básica
-       ↓
-Comparação exata
-       ↓
-EXATO / PENDENTE_DP
-       ↓
-Preparação da matriz DP
-```
+Foram feitos os testes pedidos no checkpoint:
 
-## Casos testados
+- `limpar_texto(" TOTOS ")` retorna `"totos"`;
+- `comparar_exato("TOTVS", " totvs ")` retorna `True`;
+- `comparar_exato("Totos", "totvs")` retorna `False`;
+- `preparar_dp("totos", "totvs")` cria uma matriz `6 x 6`;
+- `preparar_dp("protheu", "protheus")` cria uma matriz `8 x 9`.
 
-O programa executa os testes mínimos solicitados:
+Também foram testados os seguintes pares:
 
-- `limpar_texto(" TOTOS ")` → `"totos"`
-- `comparar_exato("TOTVS", " totvs ")` → `True`
-- `comparar_exato("Totos", "totvs")` → `False`
-- `preparar_dp("totos", "totvs")` → matriz `6 × 6`
-- `preparar_dp("protheu", "protheus")` → matriz `8 × 9`
+- `totos` x `totvs`
+- `protheu` x `protheus`
+- `totvss` x `totvs`
 
-Também são preparadas as comparações:
-
-- `totos × totvs`
-- `protheu × protheus`
-- `totvss × totvs`
+No final da execução, a lista `pendentes_dp` contém os termos que não tiveram correspondência exata.
 
 ## Como executar
 
-### Python / PyCharm
+O projeto não precisa instalar nenhuma biblioteca externa.
 
-Abra o arquivo `checkpoint_preprocessamento_totvs.py` no PyCharm e execute normalmente.
+### PyCharm
+
+Abra o arquivo `checkpoint_preprocessamento_totvs.py` no PyCharm e execute o arquivo.
 
 ### Google Colab
 
-Também é possível copiar o conteúdo para uma célula do Colab e executar.
+Também é possível copiar o código para uma célula do Google Colab e executar.
 
-O programa não depende de bibliotecas externas.
+## Falas usadas do Challenge
 
-## Falas adicionais do Challenge
-
-Foram adicionadas 3 falas reais do material do Challenge, extraídas da coluna `ANON_TRANSCRICAO` do CSV fornecido pelo grupo. Foram mantidos apenas o `meeting`, o `locutor` e o texto da fala, sem dados pessoais desnecessários.
+Foram usadas 3 falas reais do material fornecido para o Challenge, retiradas da coluna `ANON_TRANSCRICAO` do CSV. No código, foram mantidos somente o meeting, o locutor e o texto da fala.
